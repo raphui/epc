@@ -1,0 +1,13 @@
+#include "config.h"
+
+{
+    network {
+        max_clients   = <MAX_CLIENT, u8>;
+        timeout_ms    = <TIMEOUT_MS, u16>;
+    };
+
+    audio {
+        volume_default = <DEFAULT_VOLUME, u8>;
+        gain_factors    = <0x5, u16>, <0x6, u16>, <0xA, u16>;
+    };
+}

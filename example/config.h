@@ -1,0 +1,5 @@
+#define MAX_CLIENT	10
+#define TIMEOUT_MS	60 * 1000
+
+#define MAX_VOLUME	100
+#define DEFAULT_VOLUME	MAX_VOLUME - 90

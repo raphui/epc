@@ -1,0 +1,18 @@
+{
+    arith {
+        simple_add   = <1 + 2 * 3, u16>;
+        nested_paren = <(1 + (2 * (3 + 4))), u16>;
+        mix_shift    = <(5 + 3) << 2, u16>;
+        div_mod      = <20 / 3 * 3 + 20 % 3, u16>;
+        sub_chain    = <100 - 10 - 5, u16>;
+    };
+
+    bitwise {
+        and_or_xor   = <0xF0 & 0x0F | 0x55 ^ 0xAA, u8>;
+        shift_and    = <(0xFF >> 4) & 0x0F, u8>;
+        not_mask     = <~0x0F & 0xFF, u8>;
+        chain_mix    = <((0x3C ^ 0x0F) & 0xF0) | 0x01, u8>;
+        big_shift    = <1 << 15, u16>;
+        wide_xor     = <0xFFFF0000 ^ 0x00FF00FF, u32>;
+    };
+}

@@ -1,0 +1,56 @@
+# Copyright (C) 2015 Raphaël Poggi. All rights reserved.
+# Author: Raphaël Poggi <poggi.raph@gmail.com>
+#
+# Provided under the three clause BSD license found in the LICENSE file.
+
+subdirs-y :=
+dep = $(obj-y:.o=.d) $(ld-script-y:.lds=.d) $(extra-y:.lds=.d)
+
+include $(dir)/Makefile
+
+prepend-dir-to = $(addprefix $(dir)/,$1)
+prepend-dir = $(foreach d,$($1),$(call prepend-dir-to,$(d)))
+
+$(call prepend-dir,subdirs-y):
+	$(MAKE) -f Makefile.common dir=$@ $(MAKECMDGOALS)
+
+all: $(call prepend-dir,subdirs-y) $(call prepend-dir,obj-y) $(call prepend-dir,ld-script-y) $(call prepend-dir,extra-y)
+	echo $(call prepend-dir,obj-y) >> objects.lst
+	echo $(call prepend-dir,extra-y) >> extra_objects.lst
+
+clean: $(call prepend-dir,subdirs-y)
+	rm -f $(call prepend-dir,obj-y) $(call prepend-dir,dep) \
+	      $(call prepend-dir,clean-y) $(call prepend-dir,ld-script-y) \
+	      $(call prepend-dir,extra-y)
+
+build = echo "$1 $@"
+
+%.o: %.c
+	$(call build,CC)
+	$(CC) $(CFLAGS) -c $(firstword $^) -o $@
+
+%.o: %.S
+	$(call build,CC)
+	$(CC) $(CFLAGS) -c $(firstword $^) -o $@
+
+%.lds: %.lds.S
+	$(call build,LDS)
+	$(LDS) $(LDSFLAGS) -o $@ $(firstword $^)
+	mv $@ $(KERNEL_BASE)/$(linker_files)
+
+%.o: %.dts
+	$(call build,DTC)
+	$(DTC) -Idts -Odtb $(firstword $^) > $(dtb)
+	@$(OBJCOPY) -I binary -O elf32-littlearm -B arm --rename-section .data=.text,contents,readonly $(dtb) $@
+
+%.lex.c: %.l
+	$(call LEX)
+	$(LEX) -o$@ $<
+
+%.tab.c %.tab.h: %.y
+	$(call BISON)
+	$(BISON) -b $(basename $(basename $@)) -d $<
+
+-include $(call prepend-dir,dep)
+
+.PHONY: all clean $(call prepend-dir,subdirs-y)
