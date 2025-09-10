@@ -73,6 +73,7 @@ int main(int argc, char **argv)
 
 	ret = parser_process(file, emit_value);
 
+	free(file);
 err_close_fp_out:
 	fclose(fp_out);
 err_close_fp:
