@@ -332,7 +332,6 @@ int parser_process(char *f, void (*emit_value)(void *a, int width))
 				val = expr_eval(parser->expr);
 				val &= mask;
 
-				printf("(%d)", val);
 				emit_value(&val, parser->width);
 
 				f = end - 1;
