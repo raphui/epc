@@ -69,7 +69,7 @@ int main(int argc, char **argv)
 		n++;
 	}
 
-	file[fsize] = '\0';
+	file[n] = '\0';
 
 	ret = parser_process(file, emit_value);
 
