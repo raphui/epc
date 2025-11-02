@@ -220,12 +220,21 @@ int parser_process(char *f, void (*emit_value)(void *a, int width))
 				goto err_parsing;
 			}
 
-			parser->type = TOK_OP_SUB;
-			ret = expr_push_operator(parser->expr, parser->type);
-			if (ret < 0)
-				goto err_free_expr;
+			if (is_token_an_operator(parser->prev_type)
+				|| (parser->prev_type == TOK_OBRACKET)
+				|| (parser->prev_type == TOK_OPAREN)) {
+				parser->type = TOK_MINUS;
 
-			verbose_printf(TOK_TYPE(TOK_OP_SUB));
+				verbose_printf(TOK_TYPE(TOK_MINUS));
+			} else {
+				parser->type = TOK_OP_SUB;
+
+				ret = expr_push_operator(parser->expr, parser->type);
+				if (ret < 0)
+					goto err_free_expr;
+
+				verbose_printf(TOK_TYPE(TOK_OP_SUB));
+			}
 			break;
 		case '/':
 			if (!parser->in_assign) {
@@ -350,6 +359,9 @@ int parser_process(char *f, void (*emit_value)(void *a, int width))
 					goto err_parsing;
 				}
 
+				if (parser->prev_type == TOK_MINUS)
+					val = -val;
+
 				expr_push_value(parser->expr, val);
 
 				if (base == 16)
@@ -358,6 +370,8 @@ int parser_process(char *f, void (*emit_value)(void *a, int width))
 					verbose_printf("(%d)", val);
 
 				f = end - 1;
+
+				parser->type = TOK_NUMBER;
 			}
 			break;
 		}
