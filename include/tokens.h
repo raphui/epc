@@ -8,6 +8,7 @@
 #define TOK_LF			0x3
 #define TOK_NUMBER		0x4
 #define TOK_HEX_SEP		0x5
+#define TOK_MINUS		0x6
 
 #define TOK_L_OR		0x10
 #define TOK_L_AND		0x11
