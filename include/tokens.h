@@ -37,4 +37,6 @@
 #define TOK_TYPE_INT		0x202
 #define TOK_TYPE_FLOAT		0x203
 
+int is_token_an_operator(int token);
+
 #endif /* TOKENS_H */

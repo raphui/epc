@@ -19,6 +19,7 @@ endif
 obj-y := epc.o
 obj-y += parser.o
 obj-y += expr.o
+obj-y += tokens.o
 
 .PHONY: all clean $(TARGET)
 
