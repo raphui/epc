@@ -33,7 +33,7 @@ all: ${TARGET}
 
 $(TARGET):
 	$(PREFIX)rm -f objects.lst
-	$(PREFIX)$(MAKE) -f Makefile.common dir=. all
+	$(PREFIX)$(MAKE) --no-print-directory -f Makefile.common dir=. all
 	$(PREFIX)$(CC) -o $@ `cat objects.lst | tr '\n' ' '` $(LDFLAGS)
 
 cscope:
